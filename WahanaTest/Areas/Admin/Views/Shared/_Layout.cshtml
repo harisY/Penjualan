@@ -114,6 +114,20 @@
 
                             </ul>
                         </li>
+                        <! ============================= TRANSAKSI ===================== -->
+                        <li class="treeview" id="left-sidebar-menu-transaksi">
+                            <a href="#">
+                                <i class="fa fa-folder"></i>
+                                <span> Transaksi</span>
+                                <span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="transaksi-barang"><a href="~/admin/transaksi"><i class="fa fa-circle-o"></i>Barang</a></li>
+
+                            </ul>
+                        </li>
                         @*@Html.Raw(ViewBag.MenuList)*@
                         @if (ViewBag.IsAdmin == true)
                         {
