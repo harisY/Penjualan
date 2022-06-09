@@ -13,17 +13,17 @@ using Penjualan.Areas.Admin.Models;
 
 namespace Penjualan.Areas.Admin.Controllers
 {
-    public class UsersController : Controller
+    public class SatuanController : Controller
     {
         private GeneralHelper dHelper = new GeneralHelper();
-        private readonly IUsers user;
+        private readonly ISatuan service;
 
-        public UsersController() : this(new UserService()) { }
-        public UsersController(IUsers user)
+        public SatuanController() : this(new SatuanService()) { }
+        public SatuanController(ISatuan service)
         {
-            this.user = user;
+            this.service = service;
         }
-        // GET: Admin/Users
+        // GET: Admin/Satuan
         public ActionResult Index()
         {
             return View();
@@ -31,7 +31,7 @@ namespace Penjualan.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult GetList([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
         {
-            var query = user.Get().AsQueryable();
+            var query = service.Get().AsQueryable();
 
             var totalCount = query.Count();
 
@@ -40,10 +40,7 @@ namespace Penjualan.Areas.Admin.Controllers
             if (requestModel.Search.Value != string.Empty)
             {
                 var value = requestModel.Search.Value.Trim();
-                query = query.Where(p => p.username.ToLower().ToString().Contains(value.ToString().ToLower()) ||
-                                         p.email.ToLower().ToString().Contains(value.ToString().ToLower()) ||
-                                         p.phone.ToLower().ToString().Contains(value.ToString().ToLower())
-                                    );
+                query = query.Where(p => p.nama.ToLower().ToString().Contains(value.ToString().ToLower()));
             }
 
             var filteredCount = query.Count();
@@ -61,24 +58,24 @@ namespace Penjualan.Areas.Admin.Controllers
                 orderByString += (column.Data) + (column.SortDirection == Column.OrderDirection.Ascendant ? " asc" : " desc");
             }
 
-            query = query.OrderBy(orderByString == string.Empty ? "username asc" : orderByString);
+            query = query.OrderBy(orderByString == string.Empty ? "nama asc" : orderByString);
 
             #endregion Sorting
 
             // Paging
             query = query.Skip(requestModel.Start).Take(requestModel.Length);
 
-            var data = query.Select(user => new
-            {   
-                user.username,
-                user.email,
-                user.phone,
-                user.created_at
+            var data = query.Select(satuan => new
+            {
+                satuan.id,
+                satuan.nama,
+                satuan.created_at
             }).ToList();
 
             return Json(new DataTablesResponse(requestModel.Draw, data, filteredCount, totalCount), JsonRequestBehavior.AllowGet);
         }
-        public async Task<ActionResult> Add(Users model)
+
+        public async Task<ActionResult> Add(Satuan model)
         {
             bool isSave = false;
             try
@@ -86,17 +83,17 @@ namespace Penjualan.Areas.Admin.Controllers
 
                 model.created_by = dHelper.CurrentLoginUser();
 
-                var data = user.GetRow(model.created_by);
-                if (data == null)
+                var data = service.GetRow(model.nama);
+                if (data.id == 0 || data == null)
                 {
-                    await user.Add(model);
-               
+                    await service.Add(model);
+
                     isSave = true;
                     return Json(new { success = isSave, message = "Simpan Data Berhasil" }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    return Json(new { success = isSave, message = "Username sudah terdaftar" }, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = isSave, message = "Satuan sudah terdaftar" }, JsonRequestBehavior.AllowGet);
                 }
 
             }
@@ -108,14 +105,14 @@ namespace Penjualan.Areas.Admin.Controllers
             }
 
         }
-        public async Task<ActionResult> Edit(Users model)
+        public async Task<ActionResult> Edit(Satuan model)
         {
             bool isSave = false;
             try
             {
 
                 model.updated_by = dHelper.CurrentLoginUser();
-                await user.Edit(model);
+                await service.Edit(model);
 
                 isSave = true;
                 return Json(new { success = isSave, message = "Update Data Berhasil" }, JsonRequestBehavior.AllowGet);
@@ -129,17 +126,13 @@ namespace Penjualan.Areas.Admin.Controllers
             }
 
         }
-
-        public async Task<ActionResult> Delete(string username)
+        public async Task<ActionResult> Delete(int id)
         {
             bool isSave = false;
             try
             {
-                if (username.ToLower() == "admin")
-                {
-                    return Json(new { success = isSave, message = "Admin tidak boleh di hapus" }, JsonRequestBehavior.AllowGet);
-                }
-                await user.Delete(username);
+
+                await service.Delete(id);
 
                 isSave = true;
                 return Json(new { success = isSave, message = "Hapus Data Berhasil" }, JsonRequestBehavior.AllowGet);

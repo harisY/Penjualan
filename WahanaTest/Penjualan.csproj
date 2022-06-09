@@ -1021,6 +1021,8 @@
     <Content Include="Areas\Admin\Views\Dashboard\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Users\_ListUser.cshtml" />
+    <Content Include="Areas\Admin\Views\Satuan\_ListSatuan.cshtml" />
+    <Content Include="Areas\Admin\Views\Satuan\Index.cshtml" />
     <None Include="scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="scripts\Common.js" />
     <Content Include="scripts\jquery-1.10.2.js" />
@@ -1047,10 +1049,12 @@
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\InventoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\NotAccessController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SatuanController.cs" />
     <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Models\ComboBoxModel.cs" />
     <Compile Include="Areas\Admin\Models\InventoryModel.cs" />
     <Compile Include="Areas\Admin\Models\Login.cs" />
+    <Compile Include="Areas\Admin\Models\Satuan.cs" />
     <Compile Include="Areas\Admin\Models\Setting.cs" />
     <Compile Include="Areas\Admin\Models\Users.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -1065,9 +1069,11 @@
     <Compile Include="Service\GlobalService.cs" />
     <Compile Include="Service\Interface\IGlobal.cs" />
     <Compile Include="Service\Interface\IInventory.cs" />
+    <Compile Include="Service\Interface\ISatuan.cs" />
     <Compile Include="Service\Interface\ISetting.cs" />
     <Compile Include="Service\Interface\IUsers.cs" />
     <Compile Include="Service\InventoryService.cs" />
+    <Compile Include="Service\SatuanService.cs" />
     <Compile Include="Service\SetttingService.cs" />
     <Compile Include="Service\UserService.cs" />
   </ItemGroup>
